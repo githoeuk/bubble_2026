@@ -1,0 +1,157 @@
+package test02;
+
+import javax.swing.*;
+
+public class Player extends JLabel implements Moveable {
+
+    // 플레이어의 현재 좌표 상태값
+    private int x;
+    private int y;
+
+    // 좌우 방향 이미지 (방향키에 따라서 이미지 전환)
+    private ImageIcon playerR;
+    private ImageIcon playerL;
+
+    // 속도 상수
+    private final int SPEED = 4;            // 좌우 이동 속도(픽셀단위)
+    private final int JUMP_SPEED = 2;       // 점프 낙하 속도
+    private final int JUMP_HEIGHT = 130;    // 점프 최대 높이
+
+    // 이동 상태 클래스
+    // ture = 해당 방향으로 이동 중 (while 루프 조건)
+    // fasle = 멈춤 (while 루프 탈출 -> Thread 종료)
+    private boolean left = false;
+    private boolean right = false;
+    private boolean up = false;
+    private boolean down = false;
+
+    // Bubble Frame 의 key 이벤트에서 호출할 수 있도록 setter 설정
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public Player() {
+        initDate();
+        setInitLayout();
+    }
+
+    private void initDate() {
+        playerR = new ImageIcon("img/playerR.png");
+        playerL = new ImageIcon("img/playerL.png");
+    }
+
+    private void setInitLayout() {
+        // 캐릭터 초기 설정
+        x = 55;
+        y = 535;
+        setSize(50, 50);
+        //초기 방향
+        setIcon(playerR);
+        // 초기 위치
+        setLocation(x, y);
+    }
+
+    @Override
+    public void left() {
+        if (left) {
+            return; // 왼쪽으로 이동 중일 시 중복 thread 생성 방지
+        }
+        left = true;
+        setIcon(playerL);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // left 가 true인 동안 계속 이동 처리
+                // keyRelased에서 setLeft(False)가 되면 While문 탈출
+                while (left) {
+                    x = x - SPEED;
+                    setLocation(x, y);
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start(); // end of Thread
+    }
+
+    @Override
+    public void right() {
+        if (right) { // 쓰레드 중복 생성 제한
+            return;
+        }
+        right = true;
+        setIcon(playerR);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (right) {
+                    x = x + SPEED;
+                    setLocation(x, y);
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start(); // end of Thread
+    }
+
+    @Override
+    public void up() {
+
+        if (up) {
+            return;
+        }
+        up = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //130 / 2 = 65반복 65픽셀만큼 상승
+                for (int i = 0; i < JUMP_HEIGHT / JUMP_SPEED; i++) {
+                    y = y - JUMP_SPEED;
+                    setLocation(x, y);
+                    try {
+                        Thread.sleep(5); // 5ms 간격(하강 보다 느리게 설정 (하강 : 3ms))
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                up = false; // 점프 최고점 도달 -> 상승 상태 해지
+                down(); // 하강 시작
+
+            }
+        }).start();
+        System.out.println("player up()호출");
+    }
+
+    @Override
+    public void down() {
+
+        down = true;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < JUMP_HEIGHT / JUMP_SPEED; i++) {
+                    y = y + JUMP_SPEED;
+                    setLocation(x, y);
+                    try {
+                        Thread.sleep(3); // 5ms 간격(하강 보다 느리게 설정 (하강 : 3ms))
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                down = false;
+            }
+        }).start();
+
+        System.out.println("player down()호출");
+    }
+}
