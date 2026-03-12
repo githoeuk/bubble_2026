@@ -64,6 +64,14 @@ public class BackgroundService2 implements Runnable {
         } // end of while
     } // end of run
 
+    //ex
+    // Color leftColor = new Color(255, 255, 255);
+    // getRed(){
+    //      return red,green,blue
+    //  }
+    // leftColor.getRed() = int red 255 , int green 255 int blue 255
+
+
     private boolean isRed(Color color) {
         // rgb = 255,0,0  -> Color.color가  255,0,0 가 맞는지 확인.
         return color.getRed() == 255 && color.getGreen() == 0 && color.getBlue() == 0;
