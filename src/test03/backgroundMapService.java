@@ -30,7 +30,7 @@ public class backgroundMapService implements Runnable {
         try {
             image = ImageIO.read(new File("img/backgroundMapService.png"));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("충돌 감지 이미지를 찾을 수 없습니다. " + e);
         }
     }
 

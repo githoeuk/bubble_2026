@@ -1,10 +1,10 @@
-package test03;
+package _My.test03;
 
 import javax.swing.*;
 
-public class Player extends JLabel implements Moveable {
+public class Player2 extends JLabel implements Moveable2 {
 
-    // 플레이어의 현재 좌표 상태값
+    // 플레이어의 현재 위치(좌표 값)
     private int x;
     private int y;
 
@@ -17,19 +17,20 @@ public class Player extends JLabel implements Moveable {
     private final int JUMP_SPEED = 2;       // 점프 낙하 속도
     private final int JUMP_HEIGHT = 130;    // 점프 최대 높이
 
-    // 이동 상태 플래그
-    // ture = 해당 방향으로 이동 중 (while 루프 조건)
-    // fasle = 멈춤 (while 루프 탈출 -> Thread 종료)
+    // 이동 상태 플래그(flag)
+    // true -> 해당 방향으로 이동 중 (while 루프 조건)
+    // false -> 정지 (while 루프 탈출 -> Thread 종료)
+
     private boolean left = false;
     private boolean right = false;
     private boolean up = false;
     private boolean down = false;
 
-    // 벽 충돌 상태 플래그
+    // 벽 충동 상태 플래그(flag)
     private boolean leftWallCrash;
     private boolean rightWallCrash;
 
-    // getter
+    //getter
 
     @Override
     public int getX() {
@@ -65,7 +66,7 @@ public class Player extends JLabel implements Moveable {
         return rightWallCrash;
     }
 
-    // Bubble Frame 의 key 이벤트에서 호출할 수 있도록 setter 설정
+    // Bubble Frame의 key 이벤트에서 호출할 수 있도록 setter설정
     // setter
 
     public void setX(int x) {
@@ -100,56 +101,61 @@ public class Player extends JLabel implements Moveable {
         this.rightWallCrash = rightWallCrash;
     }
 
-    public Player() {
-        initDate();
+    // 생성자
+    public Player2() {
+        initData();
         setInitLayout();
     }
 
-    private void initDate() {
-        playerR = new ImageIcon("img/playerR.png");
+    // 캐릭터 이미지 생성
+    private void initData() {
         playerL = new ImageIcon("img/playerL.png");
+        playerR = new ImageIcon("img/playerR.png");
     }
 
     private void setInitLayout() {
-        // 캐릭터 초기 설정
+        //캐릭터 초기 설정
         x = 55;
         y = 535;
         setSize(50, 50);
-        //초기 방향
+        // 초기 방향
         setIcon(playerR);
         // 초기 위치
         setLocation(x, y);
     }
 
+    // 동작 구현
     @Override
     public void left() {
-        if (left) {
-            return; // 왼쪽으로 이동 중일 시 중복 thread 생성 방지
+        if (left) { // 중복을 통한 Thread 중복 생성 방지
+            return;
         }
         left = true;
         setIcon(playerL);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // left 가 true인 동안 계속 이동 처리
-                // keyReleased에서 setLeft(False)가 되면 While문 탈출
+                // left가 true인 동안 계속 이동
+                // left를 keyReleased하면 setLeft를 false처리 함으로 while문 탈출
                 while (left) {
                     x = x - SPEED;
                     setLocation(x, y);
+                    //너무 빠르기 때문에 지연시간 추가 10ms
                     try {
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
+
             }
-        }).start(); // end of Thread
-    }
+        }).start(); // end of left_Thread
+    } // end of left
 
     @Override
     public void right() {
-        if (right) { // 쓰레드 중복 생성 제한
-            return;
+        if (right) {
+            return; // 오른쪽 중복 입력을 통한 Thread생성 방지
         }
         right = true;
         setIcon(playerR);
@@ -165,13 +171,13 @@ public class Player extends JLabel implements Moveable {
                         throw new RuntimeException(e);
                     }
                 }
+
             }
-        }).start(); // end of Thread
-    }
+        }).start(); // end of right_Thread
+    } // end of right
 
     @Override
     public void up() {
-
         if (up) {
             return;
         }
@@ -179,45 +185,41 @@ public class Player extends JLabel implements Moveable {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //130 / 2 = 65반복 65픽셀만큼 상승
+                // JUMP_HEIGHT(130) /JUMP_SPEED(2) = 65 -> 65픽셀 이동
                 for (int i = 0; i < JUMP_HEIGHT / JUMP_SPEED; i++) {
                     y = y - JUMP_SPEED;
                     setLocation(x, y);
                     try {
-                        Thread.sleep(5); // 5ms 간격(하강 보다 느리게 설정 (하강 : 3ms))
+                        Thread.sleep(5); // 5ms 간격으로 상승
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                }
-                up = false; // 점프 최고점 도달 -> 상승 상태 해지
-                down(); // 하강 시작
-
+                } // end of up_for
+                up = false; // 점프를 통한 최고점 도달 -> 상승 상테 해지
+                down(); // down()메서드를 통해 점프 중력 구현
             }
-        }).start();
-        System.out.println("player up()호출");
+        }).start();// end of up_Thread
     }
 
     @Override
     public void down() {
-
         down = true;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // 상승과 동일하게 값으로 하강
                 for (int i = 0; i < JUMP_HEIGHT / JUMP_SPEED; i++) {
                     y = y + JUMP_SPEED;
-                    setLocation(x, y);
+                    setLocation(x,y);
                     try {
-                        Thread.sleep(3); // 5ms 간격(하강 보다 느리게 설정 (하강 : 3ms))
+                        Thread.sleep(3);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                }
-                down = false;
+                } // end of for
+                down = false; // 최저점 도착 시 종료
             }
-        }).start();
-
-        System.out.println("player down()호출");
+        }).start();// end of start
     }
-}
+} // end of player
