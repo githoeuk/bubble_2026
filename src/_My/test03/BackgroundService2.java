@@ -73,7 +73,7 @@ public class BackgroundService2 implements Runnable {
 
 
     private boolean isRed(Color color) {
-        // rgb = 255,0,0  -> Color.color가  255,0,0 가 맞는지 확인.
+        // red = 255,0,0  -> Color.color가  255,0,0 가 맞는지 확인.
         return color.getRed() == 255 && color.getGreen() == 0 && color.getBlue() == 0;
     }
 }

@@ -195,7 +195,7 @@ public class Player2 extends JLabel implements Moveable2 {
                         throw new RuntimeException(e);
                     }
                 } // end of up_for
-                up = false; // 점프를 통한 최고점 도달 -> 상승 상테 해지
+                up = false; // 점프를 통한 최고점 도달 -> 상승 상태 해지
                 down(); // down()메서드를 통해 점프 중력 구현
             }
         }).start();// end of up_Thread
