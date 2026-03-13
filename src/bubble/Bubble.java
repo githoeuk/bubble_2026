@@ -20,7 +20,7 @@ public class Bubble extends JLabel implements Moveable {
     //버블 이동 상태 플래그
     private static final int HORIZONTAL_DISTANCE = 400;     // 수평 이동 거리
     private static final int BUBBLE_SPEED_MS = 1;           // 이동 간격(ms)
-    private static final int SCREEN_TOP = 0;                 // 화면 상단 경계
+    private static final int SCREEN_TOP = 10;                 // 화면 상단 경계
     private boolean leftMoving = false;
     private boolean rightMoving = false;
     private boolean upMoving = false;
@@ -46,9 +46,9 @@ public class Bubble extends JLabel implements Moveable {
                 } else {
                     right(); // 왼쪽으로 400 px 이동 ->> 완료 후 up()호출
                 }
-
             } // end of run
         }).start();
+
     }
 
     private void initData() {
@@ -72,7 +72,7 @@ public class Bubble extends JLabel implements Moveable {
         leftMoving = true;
         for (int i = 0; i < HORIZONTAL_DISTANCE; i++) {
             x--;
-            setLocation(x,y);
+            setLocation(x, y);
             try {
                 Thread.sleep(BUBBLE_SPEED_MS);
             } catch (InterruptedException e) {
@@ -102,9 +102,9 @@ public class Bubble extends JLabel implements Moveable {
     @Override
     public void up() {
         upMoving = true;
-        while (y > SCREEN_TOP){  //y좌표가 0일떄까지
+        while (y > SCREEN_TOP) {  //y좌표가 0일떄까지
             y--;
-            setLocation(x,y);
+            setLocation(x, y);
             try {
                 Thread.sleep(BUBBLE_SPEED_MS);
             } catch (InterruptedException e) {
@@ -112,6 +112,16 @@ public class Bubble extends JLabel implements Moveable {
             }
         } // end of while
         upMoving = false;
+        deleteBubble();
+    } // end of up
 
+    public void deleteBubble() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        setVisible(false);
     }
+
 }

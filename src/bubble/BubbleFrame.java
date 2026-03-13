@@ -1,11 +1,15 @@
 package bubble;
 
 
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+@Getter
+@Setter
 public class BubbleFrame extends JFrame {
 
     private JLabel backgroundMap;
@@ -48,18 +52,20 @@ public class BubbleFrame extends JFrame {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
                         //이동 중이 아니고 and 벽에 충돌하지 않은 상태일때만 left() 호출
-                        if(player.isLeft() == false && player.isLeftWallCrash() == false) {
+                        if (player.isLeft() == false && player.isLeftWallCrash() == false) {
                             player.left();
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
                         //이동 중이 아니고 and 벽에 충돌하지 않은 상태일때만 left() 호출
-                        if(player.isRight() == false && player.isRightWallCrash() == false){
+                        if (player.isRight() == false && player.isRightWallCrash() == false) {
                             player.right();
                         }
                         break;
                     case KeyEvent.VK_UP:
-                        player.up();
+                        if (player.isUp() == false) {
+                            player.up();
+                        }
                         break;
                     //중력이 존재하기 때문에 down은 없음
                     // spacebar를 통한 bubble 구현
@@ -72,8 +78,8 @@ public class BubbleFrame extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
 
-                switch (e.getKeyCode()){
-                    case KeyEvent.VK_LEFT :
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
                         player.setLeft(false);
                         break;
                     case KeyEvent.VK_RIGHT:
@@ -84,19 +90,21 @@ public class BubbleFrame extends JFrame {
 
         });
     }
-    // todo 임시 버블 클래스 생성
-    private void fireBubble(){
-        Bubble bubble = new Bubble(player);
 
+    // todo 임시 버블 클래스 생성
+    private void fireBubble() {
+        Bubble bubble = new Bubble(player);
         backgroundMap.add(bubble);
         // 동적으로 컴포넌트가 그려지기 때문에 버그 발생 가능
         backgroundMap.revalidate(); // 레이아웃 재계산
         backgroundMap.repaint(); // 화면을다시 그려라
+
     }
 
     //main
     public static void main(String[] args) {
         new BubbleFrame();
     } // end of main
+
 
 } // end of class
