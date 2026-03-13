@@ -1,7 +1,6 @@
 package test03;
 
 
-
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -62,6 +61,9 @@ public class BubbleFrame extends JFrame {
                         player.up();
                         break;
                     //중력이 존재하기 때문에 down은 없음
+                    case KeyEvent.VK_SPACE:
+                        // 버블 생성
+                        break;
                 } // end of switch
             }
 

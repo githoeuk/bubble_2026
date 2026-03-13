@@ -194,7 +194,6 @@ public class Player extends JLabel implements Moveable {
 
             }
         }).start();
-        System.out.println("player up()호출");
     }
 
     @Override
@@ -218,6 +217,5 @@ public class Player extends JLabel implements Moveable {
             }
         }).start();
 
-        System.out.println("player down()호출");
     }
 }

@@ -11,6 +11,7 @@ public class Bubble extends JLabel {
     private ImageIcon bubbleIcon;
     private Player player; //플레이어의 위치값 , 방향을 알아야하기 때문
 
+    // DI
     public Bubble(Player player) {
         this.player = player;
         initData();
@@ -37,6 +38,7 @@ public class Bubble extends JLabel {
         this.y = y;
     }
 
+
     private void initData() {
         bubbleIcon = new ImageIcon("img/bubble.png");
 
@@ -45,6 +47,8 @@ public class Bubble extends JLabel {
     private void serInitLayout() {
         x = player.getX();
         y = player.getY();
+
+        setIcon(bubbleIcon);
         setSize(50, 50);
         setLocation(x, y);
         setVisible(true);
