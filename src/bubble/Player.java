@@ -147,7 +147,7 @@ public class Player extends JLabel implements Moveable {
         낙하 문법 변경
         for -> while
         while(true)
-        BackgroudPlayerService 가 바닥 감지
+        BackgroundPlayerService 가 바닥 감지
         setDown(false) 호출 --> down 상태 값을 false 변경하다면 while(down) 이 종료 -> 낙하 종료
      */
     @Override
